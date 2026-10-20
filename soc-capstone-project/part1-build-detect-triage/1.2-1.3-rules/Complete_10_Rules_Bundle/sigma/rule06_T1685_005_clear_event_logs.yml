@@ -1,0 +1,24 @@
+title: Windows Security or System Event Logs Cleared
+id: 11111111-1111-4111-8111-111111111106
+status: test
+description: Detects Windows Security or System Event Logs Cleared mapped to MITRE ATT&CK v19 (T1685.005).
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_wevtutil_log_clear.yml
+author: SOC Capstone Student
+date: 2026-10-18
+tags:
+    - attack.defense_evasion
+    - attack.t1685.005
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        Image|endswith: '\wevtutil.exe'
+        CommandLine|contains:
+            - ' cl '
+            - ' clear-log '
+    condition: selection
+falsepositives:
+    - Log rotation or lab reset maintenance
+level: high
