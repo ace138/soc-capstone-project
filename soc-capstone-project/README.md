@@ -1,1 +1,0 @@
-# soc-capstone-project
