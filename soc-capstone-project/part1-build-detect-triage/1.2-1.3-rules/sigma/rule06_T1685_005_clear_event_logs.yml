@@ -1,0 +1,33 @@
+title: Windows Security or Application Event Logs Cleared via Wevtutil or Event 1102/104
+id: 11111111-1111-4111-8111-111111111106
+status: stable
+description: >
+    Detects anti-forensic indicator removal behavior where an attacker clears Windows
+    Security (EventID 1102), System/Application (EventID 104) logs, or invokes wevtutil.exe
+    with clear-log ('cl') arguments.
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_wevtutil_log_clear.yml
+    - https://attack.mitre.org/techniques/T1070/001/
+author: Member 4 (Threat Intel & Readiness Lead) - Adapted from Florian Roth (SigmaHQ)
+date: 2026/10/18
+tags:
+    - attack.defense_evasion
+    - attack.t1070.001
+    - attack.t1685.005
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_cli:
+        Image|endswith: '\wevtutil.exe'
+        CommandLine|contains:
+            - ' cl '
+            - ' clear-log '
+    selection_eventid:
+        EventID:
+            - 1102
+            - 104
+    condition: selection_cli or selection_eventid
+falsepositives:
+    - Authorized golden-image preparation in non-production environments
+level: high

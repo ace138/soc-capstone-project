@@ -1,0 +1,120 @@
+{
+  "name": "SOC Capstone Part 1 Detection Coverage & Gap Layer (ATT&CK v19)",
+  "versions": {
+    "attack": "19",
+    "navigator": "4.9.5",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "10 Active Behavioral Detection Rules across 6 Tactics (Green, Score 100) + 3 Documented Detection Gaps (Red, Score 0).",
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1059.001",
+      "tactic": "execution",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 01: Suspicious PowerShell Execution (EventCode 4688/4104, Sysmon EventID 1)"
+    },
+    {
+      "techniqueID": "T1053.005",
+      "tactic": "persistence",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 02: Scheduled Task Creation (EventCode 4698 / schtasks.exe)"
+    },
+    {
+      "techniqueID": "T1543.003",
+      "tactic": "persistence",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 03: Windows Service Creation (EventCode 7045 / 4697 / sc.exe)"
+    },
+    {
+      "techniqueID": "T1003.001",
+      "tactic": "credential-access",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 04: LSASS Memory Credential Dumping (comsvcs.dll MiniDump & Sysmon EventID 10)"
+    },
+    {
+      "techniqueID": "T1110",
+      "tactic": "credential-access",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 05: Brute Force Correlation (>=3 EventCode 4625 followed by 4624 within 10m)"
+    },
+    {
+      "techniqueID": "T1070.001",
+      "tactic": "defense-evasion",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 06: Clear Windows Event Logs (EventCode 1102 / 104 / wevtutil cl)"
+    },
+    {
+      "techniqueID": "T1218.011",
+      "tactic": "defense-evasion",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 07: Rundll32 System Binary Proxy Execution"
+    },
+    {
+      "techniqueID": "T1105",
+      "tactic": "command-and-control",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 08: Ingress Tool Transfer via Certutil/Curl + Apache access_combined"
+    },
+    {
+      "techniqueID": "T1053.003",
+      "tactic": "persistence",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 09: Linux Cron Persistence Modification (auditd key=cron_persistence)"
+    },
+    {
+      "techniqueID": "T1098.004",
+      "tactic": "persistence",
+      "score": 100,
+      "color": "#31a354",
+      "comment": "Detected by Rule 10: Linux SSH Authorized Keys Modification (auditd key=ssh_keys)"
+    },
+    {
+      "techniqueID": "T1055.012",
+      "tactic": "defense-evasion",
+      "score": 0,
+      "color": "#e6550d",
+      "comment": "GAP 1: Process Hollowing \u2014 Requires kernel ETW (Threat-Intelligence) or EDR memory inspection beyond standard process creation logs."
+    },
+    {
+      "techniqueID": "T1557.001",
+      "tactic": "credential-access",
+      "score": 0,
+      "color": "#e6550d",
+      "comment": "GAP 2: LLMNR/NBT-NS Poisoning \u2014 Layer 2/3 peer-to-peer broadcast traffic not visible to host-only logs without a SPAN port NDR sensor (Zeek/Suricata)."
+    },
+    {
+      "techniqueID": "T1014",
+      "tactic": "defense-evasion",
+      "score": 0,
+      "color": "#e6550d",
+      "comment": "GAP 3: Kernel-Mode Rootkit (LKM/eBPF) \u2014 Subverts ring-0 syscall hooks and suppresses auditd netlink messages before user-space forwarding."
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#e6550d",
+      "#fdae6b",
+      "#31a354"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  }
+}

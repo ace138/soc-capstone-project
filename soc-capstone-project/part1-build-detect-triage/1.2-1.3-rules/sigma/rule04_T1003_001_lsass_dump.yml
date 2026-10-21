@@ -1,0 +1,35 @@
+title: LSASS Memory Credential Dumping via Comsvcs MiniDump or Process Access
+id: 11111111-1111-4111-8111-111111111104
+status: stable
+description: >
+    Detects behavioral credential dumping targeting LSASS process memory via comsvcs.dll
+    MiniDump execution or suspicious Sysmon EventID 10GrantedAccess bitmasks.
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_access/proc_access_win_lsass_memdump.yml
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_rundll32_comsvcs_dump_lsass.yml
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Member 1 (Detection Lead) - Adapted from Florian Roth & Roberto Rodriguez (SigmaHQ)
+date: 2026/10/18
+tags:
+    - attack.credential_access
+    - attack.t1003.001
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_comsvcs:
+        CommandLine|contains:
+            - 'comsvcs'
+            - 'MiniDump'
+            - 'lsass'
+    selection_sysmon_access:
+        TargetImage|endswith: '\lsass.exe'
+        GrantedAccess|contains:
+            - '0x1fffff'
+            - '0x143a'
+            - '0x1410'
+            - '0x1010'
+    condition: selection_comsvcs or selection_sysmon_access
+falsepositives:
+    - Endpoint Detection and Response (EDR) sensors inspecting LSASS memory
+level: critical

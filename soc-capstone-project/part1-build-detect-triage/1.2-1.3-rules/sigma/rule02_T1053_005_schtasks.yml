@@ -1,0 +1,33 @@
+title: Suspicious Scheduled Task Creation via Schtasks or Event 4698
+id: 11111111-1111-4111-8111-111111111102
+status: stable
+description: >
+    Detects behavioral creation of scheduled tasks via schtasks.exe /create or Security
+    EventID 4698 by non-SYSTEM interactive users to establish persistence.
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_schtasks_creation.yml
+    - https://attack.mitre.org/techniques/T1053/005/
+author: Member 2 (SIEM Architect) - Adapted from Florian Roth (SigmaHQ)
+date: 2026/10/18
+modified: 2026/10/19
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.execution
+    - attack.t1053.005
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection:
+        Image|endswith: '\schtasks.exe'
+        CommandLine|contains: '/create'
+    filter_system:
+        User|contains:
+            - 'NT AUTHORITY\SYSTEM'
+            - 'LOCAL SERVICE'
+            - 'NETWORK SERVICE'
+    condition: selection and not filter_system
+falsepositives:
+    - Interactive administrators manually registering maintenance tasks
+level: medium

@@ -1,0 +1,28 @@
+title: New Windows Service Created via Sc.exe or Event 7045
+id: 11111111-1111-4111-8111-111111111103
+status: stable
+description: >
+    Detects behavioral registration of a new Windows Service via sc.exe create or System
+    EventID 7045 / Security EventID 4697 for persistence or privilege escalation.
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_sc_create_service.yml
+    - https://attack.mitre.org/techniques/T1543/003/
+author: Member 2 (SIEM Architect) - Adapted from Timur Zinniatullin & Daniil Yugoslavskiy (SigmaHQ)
+date: 2026/10/18
+tags:
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.t1543.003
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_sc:
+        Image|endswith: '\sc.exe'
+        CommandLine|contains:
+            - 'create'
+            - 'binPath='
+    condition: selection_sc
+falsepositives:
+    - Legitimate software or driver installation by authorized administrators
+level: medium

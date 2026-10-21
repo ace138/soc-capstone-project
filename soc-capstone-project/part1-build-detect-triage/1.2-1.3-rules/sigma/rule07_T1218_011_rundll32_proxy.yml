@@ -1,0 +1,32 @@
+title: Suspicious Rundll32 System Binary Proxy Execution
+id: 11111111-1111-4111-8111-111111111107
+status: stable
+description: >
+    Detects behavioral abuse of rundll32.exe executing inline scripting, unusual DLL export
+    functions (e.g., comsvcs, Control_RunDLL), or payloads staged in temporary directories.
+references:
+    - https://github.com/SigmaHQ/sigma/blob/master/rules/windows/process_creation/proc_creation_win_rundll32_susp_activity.yml
+    - https://attack.mitre.org/techniques/T1218/011/
+author: Member 1 (Detection Lead) - Adapted from Florian Roth & Nasreddine Bencherchali (SigmaHQ)
+date: 2026/10/18
+tags:
+    - attack.defense_evasion
+    - attack.t1218.011
+logsource:
+    product: windows
+    category: process_creation
+detection:
+    selection_img:
+        Image|endswith: '\rundll32.exe'
+    selection_cli:
+        CommandLine|contains:
+            - 'javascript:'
+            - 'RunHTMLApplication'
+            - 'comsvcs'
+            - 'Control_RunDLL'
+            - '\AppData\'
+            - '\Windows\Temp\'
+    condition: selection_img and selection_cli
+falsepositives:
+    - Legacy administrative Control Panel applets invoked via command line
+level: medium
